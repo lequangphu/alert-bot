@@ -51,7 +51,7 @@ df_filtered = df[expired_filter]
 
 # check if df is empty or not
 if df_filtered.empty:
-    print("No expired appeal.")
+    pass
 else:
     # iterate over the rows of the filtered dataframe and send messages to the group chat
     for index, row in df_filtered.iterrows():
