@@ -6,7 +6,7 @@ import telebot
 import datetime
 
 # load secrets to connect to google sheets and telegram
-with open('Secrets/secrets.json') as f:
+with open('/Users/phu/alert-bot-for-Tris/Secrets/secrets.json') as f:
     secrets = json.load(f)
 
 # g-sheets credentials
@@ -36,7 +36,7 @@ df = df[
 ]
 
 # create col message
-df['Message'] = [f"Appeal expired: {row['Appeal Number']}\n{row['URLs']}" for index, row in df.iterrows()]
+df['Message'] = [f"Appeal no: {row['Appeal Number']}, expired at: {row['End time']}, visit: {row['URLs']}" for index, row in df.iterrows()]
 
 # telegram bot
 bot_token = secrets['TELEGRAM_BOT_TOKEN']
@@ -47,8 +47,13 @@ bot = telebot.TeleBot(bot_token)
 now = datetime.datetime.now()
 
 # filter the dataframe to get rows where End time is within 5 minutes of current time
-df_filtered = df[(pd.to_datetime(df['End time'], format='%Y-%m-%d %H:%M') - now).abs() < pd.Timedelta('5 minutes')]
+df_filtered = df[(pd.to_datetime(df['End time'], format='%m/%d/%Y %H:%M:%S') - now).abs() < pd.Timedelta('5 minutes')]
 
 # iterate over the rows of the filtered dataframe and send messages to the group chat
 text = '\n\n'.join(row['Message'] for index, row in df_filtered.iterrows())
-bot.send_message(chat_id=group_chat_id, text=text)
+
+# Check if the text is not empty or contains only whitespace
+if text.strip():
+    bot.send_message(chat_id=group_chat_id, text=text)
+else:
+    print("No messages to send.")
