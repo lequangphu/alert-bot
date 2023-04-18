@@ -3,7 +3,6 @@ from google.oauth2.service_account import Credentials
 import gspread
 import pandas as pd
 import telebot
-import datetime
 
 # load secrets to connect to google sheets and telegram
 with open('/Users/phu/alert-bot-for-Tris/Secrets/secrets.json') as f:
@@ -43,11 +42,12 @@ bot_token = secrets['TELEGRAM_BOT_TOKEN']
 group_chat_id = secrets['TELEGRAM_GROUP_CHAT_ID']
 bot = telebot.TeleBot(bot_token)
 
-# get the current time
-now = datetime.datetime.now()
-
-# filter the dataframe to get rows where End time is within 5 minutes of current time
-df_filtered = df[(now - pd.to_datetime(df['End time'], format='%m/%d/%Y %H:%M:%S')) < pd.Timedelta('5 minutes')] # type: ignore
+# filter the dataframe to get rows where End time is less than 5 minutes before current time
+time_delta = pd.Timestamp.now() - pd.to_datetime(df['End time'], format='%m/%d/%Y %H:%M:%S') # type: ignore
+# print(time_delta)
+expired_filter = time_delta.apply(lambda x: pd.Timedelta('0 minutes') < x < pd.Timedelta('5 minutes'))
+# print(expired_filter)
+df_filtered = df[expired_filter]
 
 # check if df is empty or not
 if df_filtered.empty:
