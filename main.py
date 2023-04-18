@@ -49,11 +49,11 @@ now = datetime.datetime.now()
 # filter the dataframe to get rows where End time is within 5 minutes of current time
 df_filtered = df[(pd.to_datetime(df['End time'], format='%m/%d/%Y %H:%M:%S') - now).abs() < pd.Timedelta('5 minutes')]
 
-# iterate over the rows of the filtered dataframe and send messages to the group chat
-text = '\n\n'.join(row['Message'] for index, row in df_filtered.iterrows())
-
-# Check if the text is not empty or contains only whitespace
-if text.strip():
-    bot.send_message(chat_id=group_chat_id, text=text)
+# check if df is empty or not
+if df_filtered.empty:
+    print("No expired appeal.")
 else:
-    print("No messages to send.")
+    # iterate over the rows of the filtered dataframe and send messages to the group chat
+    text = '\n\n'.join(row['Message'] for index, row in df_filtered.iterrows())
+
+    bot.send_message(chat_id=group_chat_id, text=text)
