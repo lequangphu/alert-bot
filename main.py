@@ -5,7 +5,7 @@ import pandas as pd
 import telebot
 
 # load secrets to connect to google sheets and telegram
-with open('/Users/phu/alert-bot-for-Tris/Secrets/secrets.json') as f:
+with open('Secrets/secrets.json') as f:
     secrets = json.load(f)
 
 # g-sheets credentials
