@@ -1,3 +1,4 @@
+google == 3.0.0
 gspread == 5.8.0
 pandas == 2.0.0
 pip == 23.1
