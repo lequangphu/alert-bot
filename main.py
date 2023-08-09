@@ -35,7 +35,7 @@ df = df[
 ]
 
 # create col message
-df['Message'] = [f"Appeal no: {row['Appeal Number']}\nExpired at: {row['End time']}\nVisit: {row['URLs']}" for index, row in df.iterrows()]
+df['Message'] = [f"Appeal no: {row['Appeal Number']}\nExpired at: {row['End time']}" for index, row in df.iterrows()]
 
 # telegram bot
 bot_token = secrets['TELEGRAM_BOT_TOKEN']
