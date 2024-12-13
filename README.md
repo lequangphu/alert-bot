@@ -1,2 +1,2 @@
-# alert-bot-for-Tris
-A telegram bot which alerts due appeal for Tris
+# alert-bot
+A telegram bot which alerts due tasks
